@@ -226,8 +226,60 @@ function compute_stars6(fc)
     return {r=col.x,g=col.x,b=col.x}
 end
 
+function Rot(a)
+    local tmp = {}
+    local s = math.sin(a)
+    local c = math.cos(a)
+    tmp[1] = {c,-s}
+    tmp[2] = {s,c}
+    return tmp -- rotation matrix
+end
 
-local compute_stars = compute_stars6
+function compute_stars7(fc)
+    -- after this statement
+    -- vec2 uv = (fragCoord-0.5*iResolution.xy)/iResolution.y;
+    -- compute .5*iResolution.xy
+    local tmp = v3copy(iResolution)
+    tmp.x = tmp.x * 0.5
+    tmp.y = tmp.y * 0.5
+    
+    -- do the subtract
+    local tmp1 = v3(fc.x-tmp.x,fc.y-tmp.y)
+
+    -- divide by resolution H
+    local uv = v3(tmp1.x/H,tmp1.y/H)
+
+    -- after this statement
+    -- uv*=3.0;
+    uv.x = uv.x * 3.0
+    uv.y = uv.y * 3.0
+
+    -- vec3 col = vec3(0);
+    local col = v3(0,0,0)
+
+    --  float d = length(uv);
+    local d = length(uv)
+    
+    -- float m = 0.05/d;
+    local m = 0.05/d
+
+    -- col += m;
+    col.x = col.x + m
+    col.y = col.y + m
+    
+    -- float rays = max(0.0, 1.0-abs(uv.x*uv.y*1000.0));
+    local rays = max(0, 1.0-math.abs(uv.x*uv.y*1000.0))
+
+    -- col += rays;
+    col.x = col.x + rays
+    col.y = col.y + rays
+    
+    -- uv *= Rot(3.14159/4) ???
+    
+    return {r=col.x,g=col.x,b=col.x}
+end
+
+local compute_stars = compute_stars7
 
 function love.draw()
     for i=1,W do
