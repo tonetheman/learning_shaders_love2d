@@ -295,8 +295,8 @@ function compute_stars7(fc)
     rays = max(0, 1.0-math.abs(uv.x*uv.y*1000.0))
 
     -- col += rays;
-    col.x = col.x + rays
-    col.y = col.y + rays
+    col.x = col.x + 0.3*rays
+    col.y = col.y + 0.3*rays
 
     return {r=col.x,g=col.x,b=col.x}
 end
