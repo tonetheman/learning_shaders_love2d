@@ -235,6 +235,19 @@ function Rot(a)
     return tmp -- rotation matrix
 end
 
+--[[
+    pass a vector
+    pass a matrix
+    overwrite the vector in place with result
+]]
+function matMultInPlace(dst,mat)
+    local v1 = dst.x*mat[1][1] + dst.y*mat[1][2]
+    local v2 = dst.x*mat[2][1] + dst.y*mat[2][2]
+    dst.x = v1
+    dst.y = v2
+end
+
+-- now has 2 sets of points
 function compute_stars7(fc)
     -- after this statement
     -- vec2 uv = (fragCoord-0.5*iResolution.xy)/iResolution.y;
@@ -275,7 +288,16 @@ function compute_stars7(fc)
     col.y = col.y + rays
     
     -- uv *= Rot(3.14159/4) ???
-    
+    local tmp2 = Rot(3.14159/4)
+    matMultInPlace(uv,tmp2)
+
+    -- rays = max(0.0, 1.0-abs(uv.x*uv.y*1000.0));
+    rays = max(0, 1.0-math.abs(uv.x*uv.y*1000.0))
+
+    -- col += rays;
+    col.x = col.x + rays
+    col.y = col.y + rays
+
     return {r=col.x,g=col.x,b=col.x}
 end
 
