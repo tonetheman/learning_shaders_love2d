@@ -96,3 +96,15 @@ function matMultInPlace(dst,mat)
     dst.x = v1
     dst.y = v2
 end
+
+function fract(n)
+    if n ~= nil then
+        local a,b = math.modf(n)
+        return b
+    end
+    return 0
+end
+
+function fract_v3(v)
+    return {x = fract(v.x), y = fract(v.y), z = fract(v.z)}
+end

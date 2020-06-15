@@ -7,7 +7,6 @@ require("utils")
 require("shaders")
 require("stars")
 
-
 function love.load()
     -- load the W and H at startup
     -- that way it is only defined
@@ -16,8 +15,6 @@ function love.load()
     H = love.graphics.getHeight()
     iResolution = v3(W,H,0)
 end
-
-
 
 function Star(uv,flare)
     --  float d = length(uv);
@@ -76,7 +73,36 @@ function compute_stars8(fc)
 
 end
 
-local compute_stars = compute_stars8
+function compute_stars9(fc)
+        -- after this statement
+    -- vec2 uv = (fragCoord-0.5*iResolution.xy)/iResolution.y;
+    -- compute .5*iResolution.xy
+    local tmp = v3copy(iResolution)
+    tmp.x = tmp.x * 0.5
+    tmp.y = tmp.y * 0.5
+    
+    -- do the subtract
+    local tmp1 = v3(fc.x-tmp.x,fc.y-tmp.y)
+
+    -- divide by resolution H
+    local uv = v3(tmp1.x/H,tmp1.y/H)
+
+    -- after this statement
+    -- uv*=3.0;
+    uv.x = uv.x * 3.0
+    uv.y = uv.y * 3.0
+
+    -- vec3 col = vec3(0);
+    local col = v3(0,0,0)
+
+    local gv = fract_v3(uv)
+    col.x = col.x + gv.x
+    col.y = col.y + gv.y
+    col.z = col.z + gv.z
+    return {r=col.x,g=col.y,b=col.z}
+end
+
+local compute_stars = compute_stars9
 
 function love.draw()
     for i=1,W do
