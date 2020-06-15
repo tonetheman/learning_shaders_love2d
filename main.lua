@@ -2,13 +2,18 @@
 local W = nil
 local H = nil
 local iResolution = nil
-
+local VER = nil
 require("utils")
 require("shaders")
 require("stars")
 
 
 function love.load()
+    local major,minor,rev,codename = love.getVersion()
+    VER = {
+        major = major, minor = minor,
+        rev = rev, codename = codename
+    }
     -- load the W and H at startup
     -- that way it is only defined
     -- in the conf.lua file
@@ -99,6 +104,7 @@ function love.draw()
             -- notice shaders use 0,0 in botton left corner
             -- to match we are flipping the Y value
             love.graphics.points(i,H-j)
+            -- love.graphics.point(i,H-j)
         end
     end
 end
